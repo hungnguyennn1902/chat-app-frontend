@@ -1,7 +1,15 @@
+import Logout from "@/components/auth/Logout"
+import { useAuthStore } from "@/stores/useAuthStore"
+
 function HomeChatPage() {
+  const user = useAuthStore((state) => state.user)
   return (
     <>
-      <h1>Home Chat Page</h1>
+      <div>
+        <h1>{user?.username}</h1>
+        <Logout />
+      </div>
+
     </>
   )
 }

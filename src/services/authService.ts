@@ -16,10 +16,22 @@ export const authService = {
             username,
             password
         });
-        return response.data;
+        return response.data.data;
     },
 
     signOut: async () => {
         return await api.post('/auth/signout');
+    },
+
+    fetchMe: async () => {
+        const response = await api.get('/users/me');
+        console.log("Fetch Me Response:", response.data.data);
+        return response.data.data;
+    },
+
+    refreshToken: async () => {
+        const response = await api.post('/auth/refresh-token');
+        return response.data.data;
     }
-};
+}
+

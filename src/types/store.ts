@@ -19,4 +19,10 @@ export interface AuthState {
     ) => Promise<void>;
 
     signOut: () => Promise<void>;
+
+    fetchMe: () => Promise<void>;
+
+    refreshToken: () => Promise<void>;
+
+    setAccessToken: (accessToken: string) => void;
 }
