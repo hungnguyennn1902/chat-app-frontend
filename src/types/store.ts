@@ -1,11 +1,12 @@
-import type {User} from "./user";
+import type { Conversation, Message } from "./chat.ts";
+import type { User } from "./user";
 export interface AuthState {
     accessToken: string | null;
     user: User | null;
     loading: boolean;
 
     clearState: () => void;
-    signUp : (
+    signUp: (
         username: string,
         email: string,
         password: string,
@@ -30,6 +31,23 @@ export interface AuthState {
 export interface ThemeState {
     isDark: boolean;
     toggleTheme: () => void;
-    setTheme : (dark: boolean) => void;
-    
+    setTheme: (dark: boolean) => void;
+
 }
+
+export interface ChatState {
+    conversations: Conversation[];
+    messages: Record<
+        string,
+        {
+            items: Message[];
+            hasMore: boolean; //infinity scroll
+            nextCursor?: string | null; // for pagination
+        }
+    >;
+    activeConversationId: string | null;
+    loading: boolean;
+    reset: () => void;
+    setActiveConversation: (id: string | null) => void;
+    fetchConversations: () => Promise<void>;
+}   

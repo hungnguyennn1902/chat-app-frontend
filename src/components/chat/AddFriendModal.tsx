@@ -1,7 +1,7 @@
 const AddFriendModal = () => {
     return(
         <div>
-            <h1>Add Friend Modal</h1>
+            <a href="">Add</a>
         </div>
     )
 }

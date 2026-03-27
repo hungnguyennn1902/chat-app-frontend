@@ -1,7 +1,7 @@
 const NewGroupChatModal = () => {
     return(
         <div> 
-            <h1>New Group Chat Modal</h1>
+            <a href="">Modal</a>
         </div>
     )
 }

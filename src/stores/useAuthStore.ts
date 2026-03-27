@@ -1,13 +1,21 @@
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 import { toast } from "sonner"
 import { authService } from "@/services/authService"
 import type { AuthState } from "@/types/store"
-export const useAuthStore = create<AuthState>((set, get) => ({
+import { useChatStore } from "./useChatStore"
+export const useAuthStore = create<AuthState>()(
+    persist(
+        (set, get) => ({
     accessToken: null,
     user: null,
     loading: false,
 
-    clearState: () => set({ accessToken: null, user: null, loading: false }),
+    clearState: () => {
+        set({ accessToken: null, user: null, loading: false })
+        localStorage.clear()
+        useChatStore.getState().reset() // Clear chat state on sign out
+    },
 
     signUp: async (firstName, lastName, username, email, password) => {
 
@@ -26,9 +34,11 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     signIn: async (username, password) => {
         try {
             set({ loading: true })
+            localStorage.clear()
             const { accessToken } = await authService.signIn(username, password)
             set({ accessToken })
             await get().fetchMe()
+            useChatStore.getState().fetchConversations() 
             toast.success("Signed in successfully!")
         } catch (error) {
             console.error("Sign In Error:", error)
@@ -84,4 +94,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     setAccessToken: (accessToken) => {
         set({ accessToken })
     }
-}))
+}),
+    {
+        name: "auth-storage",
+        partialize: (state) => ({user: state.user})
+    }
+))

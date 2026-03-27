@@ -25,7 +25,6 @@ export const authService = {
 
     fetchMe: async () => {
         const response = await api.get('/users/me');
-        console.log("Fetch Me Response:", response.data.data);
         return response.data.data;
     },
 
