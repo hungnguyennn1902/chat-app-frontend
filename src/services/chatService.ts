@@ -19,5 +19,25 @@ export const chatService = {
             messages: response.data.data.messages,
             cursor: response.data.data.nextCursor
         }
+    },
+
+    async sendDirectMessage(recipientId: string, content:string = "", conversationId?: string, imgUrl?: string){
+        const response = await api.post('/messages/direct', {
+            recipientId,
+            content,
+            conversationId,
+            imgUrl
+        });
+        return response.data.data;
+    },
+
+    async sendGroupMessage(conversationId: string, content: string = "", imgUrl?: string) {
+        const response = await api.post('/messages/group', {
+            conversationId,
+            content,
+            imgUrl
+        });
+        return response.data.data;
     }
+
 }

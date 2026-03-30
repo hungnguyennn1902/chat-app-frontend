@@ -21,7 +21,7 @@ export const useChatStore = create<ChatState>()(
                     const conversations = await chatService.fetchConversations();
                     set({ conversations });
                 } catch (error) {
-                    console.error("Lỗi xảy ra khi fetchConversations:", error);
+                    console.error("An error occurred while fetching conversations:", error);
                 } finally {
                     set({ convoLoading: false })
                 }
@@ -65,6 +65,24 @@ export const useChatStore = create<ChatState>()(
 
 
 
+            }, 
+
+            sendDirectMessage: async (recipientId, content, conversationId, imgUrl) => {
+                try{
+                    const {activeConversationId} = get()
+                    await chatService.sendDirectMessage(recipientId, content, conversationId ?? activeConversationId ?? undefined, imgUrl) 
+                }catch(error){
+                    console.error("An error occurred while sending direct message:", error)
+                }
+            }, 
+
+            sendGroupMessage: async (conversationId, content, imgUrl) => {
+                try{
+                    const {activeConversationId} = get()
+                    await chatService.sendGroupMessage(conversationId ?? activeConversationId ?? "", content, imgUrl) 
+                }catch(error){
+                    console.error("An error occurred while sending group message:", error)
+                }
             }
         }), {
         name: "chat-storage",
