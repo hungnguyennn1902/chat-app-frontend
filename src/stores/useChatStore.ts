@@ -83,6 +83,49 @@ export const useChatStore = create<ChatState>()(
                 }catch(error){
                     console.error("An error occurred while sending group message:", error)
                 }
+            },
+
+            addMessage: async (message) => {
+                try{
+                    const {user} = useAuthStore.getState()
+                    const {fetchMessages} = get()
+                    message.isOwn = message.senderId === user?._id
+                    const convoId = message.conversationId
+                    let prevItems = get().messages[convoId]?.items ?? []
+
+                    if(prevItems.length === 0){
+                        await fetchMessages(convoId)
+                        prevItems = get().messages[convoId]?.items ?? []
+                    }
+
+                    set((state) => {
+                        if(prevItems.some((m) => m._id === message._id)){
+                            return state
+                        }
+                        return {
+                            messages: {
+                                ...state.messages,
+                                [convoId]: {
+                                    items: [...prevItems, message],
+                                    hasMore: state.messages[convoId]?.hasMore ?? true,
+                                    nextCursor: state.messages[convoId]?.nextCursor,
+                                }
+                            }
+                        }
+                    })
+                    
+                }catch(error){
+                    console.error("An error occurred while adding message:", error)
+                }
+            },
+
+            updateConversation: (conversation) => {
+                set((state) => {
+                    return {
+                        conversations: state.conversations.map((c) => c._id === conversation._id ? {...c, ...conversation} : c)
+                    }
+                })
+
             }
         }), {
         name: "chat-storage",

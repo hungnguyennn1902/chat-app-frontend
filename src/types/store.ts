@@ -1,5 +1,6 @@
 import type { Conversation, Message } from "./chat.ts";
 import type { User } from "./user";
+import type { Socket } from "socket.io-client";
 export interface AuthState {
     accessToken: string | null;
     user: User | null;
@@ -54,4 +55,15 @@ export interface ChatState {
     fetchMessages: (conversationId: string, cursor?: string) => Promise<void>;
     sendDirectMessage: (recipientId: string, content?: string, conversationId?: string, imgUrl?: string) => Promise<void>;
     sendGroupMessage: (conversationId: string, content?: string, imgUrl?: string) => Promise<void>;
-}   
+
+    addMessage: (message: Message) => Promise<void>;
+
+    updateConversation: (conversation: Conversation) => void;
+}
+
+export interface SocketState {
+    socket: Socket | null;
+    onlineUsers: string[]; 
+    connectSocket: () => void;
+    disconnectSocket: () => void;
+}
