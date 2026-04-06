@@ -38,6 +38,11 @@ export const chatService = {
             imgUrl
         });
         return response.data.data;
+    },
+
+    async markAsSeen(conversationId: string) {
+        const res = await api.patch(`/conversations/${conversationId}/seen`);
+        return res.data.data;
     }
 
 }

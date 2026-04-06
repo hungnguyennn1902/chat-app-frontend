@@ -42,10 +42,23 @@ export const useSocketStore = create<SocketState>((set,get)=>({
                 lastMessage,
                 unreadCount
             }
+
             if(useChatStore.getState().activeConversationId == message.conversationId){
-                // to do mark as read
+                useChatStore.getState().markAsSeen()
             }
+
             useChatStore.getState().updateConversation(updatedConversation)
+        })
+
+        socket.on("read-message",({conversation, lastMessage})=>{
+            const updated = {
+                _id: conversation._id,
+                lastMessage,
+                lastMessageAt: conversation.lastMessageAt,
+                unreadCount: conversation.unreadCount,
+                seenBy: conversation.seenBy
+            }
+            useChatStore.getState().updateConversation(updated)
         })
 
     },
